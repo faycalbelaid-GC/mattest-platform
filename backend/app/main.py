@@ -10,10 +10,7 @@ from app.routers import auth, materials, tests, predictions, reports, websockets
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
-    # Pre-load ML models
-    from app.ml.models import get_strength_model, get_anomaly_model
-    get_strength_model()
-    get_anomaly_model()
+    # ML models chargés à la demande (lazy) pour économiser la RAM sur free tier
     yield
 
 

@@ -5,6 +5,6 @@ import type { WsMessage } from '../types'
 export function useWebSocket(handler: (msg: WsMessage) => void) {
   useEffect(() => {
     const unsub = wsClient.subscribe(handler)
-    return unsub
+    return () => { unsub() }
   }, [handler])
 }

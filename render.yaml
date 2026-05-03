@@ -3,14 +3,14 @@ services:
     name: mattest-backend
     runtime: python
     rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install -r requirements-render.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
     plan: free
     envVars:
       - key: DATABASE_URL
-        sync: false          # à renseigner manuellement (Supabase URL)
+        sync: false
       - key: REDIS_URL
-        sync: false          # à renseigner manuellement (Upstash URL)
+        sync: false
       - key: SECRET_KEY
         generateValue: true
       - key: ALGORITHM
@@ -18,8 +18,12 @@ services:
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: "1440"
       - key: CORS_ORIGINS
-        sync: false          # URL Vercel de ton frontend
+        sync: false
       - key: ML_MODELS_DIR
         value: ./ml_models
       - key: REPORTS_DIR
         value: ./reports
+      - key: APP_ENV
+        value: production
+      - key: DEBUG
+        value: "false"

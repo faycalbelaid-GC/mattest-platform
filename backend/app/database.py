@@ -2,7 +2,17 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 from sqlalchemy.orm import DeclarativeBase
 from app.config import settings
 
-engine = create_async_engine(settings.database_url, echo=settings.debug, pool_pre_ping=True)
+# Supabase (et la plupart des Postgres cloud) exigent SSL
+_connect_args = {}
+if "supabase.co" in settings.database_url or "render.com" in settings.database_url:
+    _connect_args = {"ssl": "require"}
+
+engine = create_async_engine(
+    settings.database_url,
+    echo=settings.debug,
+    pool_pre_ping=True,
+    connect_args=_connect_args,
+)
 AsyncSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
